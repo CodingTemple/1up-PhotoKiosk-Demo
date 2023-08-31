@@ -1,23 +1,45 @@
 import tkinter as tk
 from tkinter import filedialog, Scale
-from PIL import ImageTk, Image, ImageEnhance
+from PIL import Image, ImageTk, ImageEnhance
+from PIL import Image, ImageEnhance
+
+from PIL import Image, ImageEnhance
 
 class ImageProcessor:
-    def __init__(self):
-        self.img = None
+    def __init__(self, path=None):
+        if path:
+            self.original_img = Image.open(path)
+            self.img = self.original_img.copy()
+        else:
+            self.original_img = None
+            self.img = None
+
+    def ensure_image_loaded(self):
+        if self.original_img is None:
+            raise ValueError("No image has been loaded.")
 
     def load_image(self, path):
-        self.img = Image.open(path)
+            self.original_img = Image.open(path)
+            
+            # Scale image if necessary
+            max_size = (1000, 1000)
+            if self.original_img.size[0] > max_size[0] or self.original_img.size[1] > max_size[1]:
+                self.original_img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+            self.img = self.original_img.copy()
 
     def to_grayscale(self):
-        self.img = self.img.convert('L')
+        self.ensure_image_loaded()
+        self.img = self.original_img.convert('L')
 
     def adjust_brightness(self, factor):
-        enhancer = ImageEnhance.Brightness(self.img)
+        self.ensure_image_loaded()
+        enhancer = ImageEnhance.Brightness(self.original_img)
         self.img = enhancer.enhance(factor)
 
     def adjust_contrast(self, factor):
-        enhancer = ImageEnhance.Contrast(self.img)
+        self.ensure_image_loaded()
+        enhancer = ImageEnhance.Contrast(self.original_img)
         self.img = enhancer.enhance(factor)
 
     def save(self, path):
@@ -36,37 +58,9 @@ class ImageManipulator:
 
     def load_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp *.gif"), ("All files", "*.*")])
-
         if file_path:
-            self.processor.img = Image.open(file_path)
-            self.processor.img = self.scale_image(self.processor.img)
+            self.processor.load_image(file_path)
             self.display_image_controls()
-
-    def scale_image(self, img):
-        max_size = 1000
-        width, height = img.size
-
-        # Calculate aspect ratio
-        aspect = width / float(height)
-        new_width = 0
-        new_height = 0
-
-        if width > height:
-            # If width is greater than height
-            if width > max_size:
-                new_width = max_size
-                new_height = int(max_size / aspect)
-        else:
-            # If height is greater than width or equal
-            if height > max_size:
-                new_height = max_size
-                new_width = int(max_size * aspect)
-
-        # Resize only if needed
-        if new_width and new_height:
-            img = img.resize((new_width, new_height), Image.LANCZOS)
-
-        return img
 
 
     def display_image_controls(self):

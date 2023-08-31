@@ -3,8 +3,6 @@ from tkinter import filedialog, Scale
 from PIL import Image, ImageTk, ImageEnhance
 from PIL import Image, ImageEnhance
 
-from PIL import Image, ImageEnhance
-
 class ImageProcessor:
     def __init__(self):
 

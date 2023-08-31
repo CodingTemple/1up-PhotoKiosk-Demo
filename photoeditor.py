@@ -4,7 +4,6 @@ from PIL import Image, ImageTk, ImageEnhance
 
 class ImageProcessor:
     def __init__(self):
-
         self.original_img = None
         self.img = None
 
@@ -111,7 +110,7 @@ class ImageManipulator:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("Image Manipulator")
+    root.title("Photo Kiosk")
 
     processor = ImageProcessor()
     app = ImageManipulator(root, processor)

@@ -6,17 +6,11 @@ from PIL import Image, ImageEnhance
 from PIL import Image, ImageEnhance
 
 class ImageProcessor:
-    def __init__(self, path=None):
-        if path:
-            self.original_img = Image.open(path)
-            self.img = self.original_img.copy()
-        else:
-            self.original_img = None
-            self.img = None
+    def __init__(self):
 
-    def ensure_image_loaded(self):
-        if self.original_img is None:
-            raise ValueError("No image has been loaded.")
+        self.original_img = None
+        self.img = None
+
 
     def load_image(self, path):
             self.original_img = Image.open(path)
@@ -29,16 +23,13 @@ class ImageProcessor:
             self.img = self.original_img.copy()
 
     def to_grayscale(self):
-        self.ensure_image_loaded()
         self.img = self.original_img.convert('L')
 
     def adjust_brightness(self, factor):
-        self.ensure_image_loaded()
         enhancer = ImageEnhance.Brightness(self.original_img)
         self.img = enhancer.enhance(factor)
 
     def adjust_contrast(self, factor):
-        self.ensure_image_loaded()
         enhancer = ImageEnhance.Contrast(self.original_img)
         self.img = enhancer.enhance(factor)
 

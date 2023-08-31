@@ -19,7 +19,8 @@ class ImageProcessor:
             self.img = self.original_img.copy()
 
     def to_grayscale(self):
-        self.img = self.original_img.convert('L')
+        self.img = self.img.convert('L')
+        self.original_img = self.original_img.convert('L')
 
     def adjust_brightness(self, factor):
         enhancer = ImageEnhance.Brightness(self.original_img)
@@ -52,7 +53,7 @@ class ImageManipulator:
 
     def display_image_controls(self):
         # Remove the Load Image button to make space for image and controls
-        self.load_btn.pack_forget()
+        self.load_btn.destroy()
 
         # Display image
         self.image_tk = ImageTk.PhotoImage(self.processor.img)
